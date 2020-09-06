@@ -4,36 +4,48 @@
  */
 
 module.exports = function (date) {
-    var time = new Date(date);
+    dateObj = {time: new Date(date)} 
 
-    Object.defineProperty(Date, "value", {
+    Object.defineProperty(dateObj, "value", {
         get: function() {
             function digits (num) {
                 return num < 10 ? '0'+num : num;
             }
-            return '"' + this.getFullYear() + '-' + digits(this.getMonth()+1)  + '-' + digits(this.getDate()) + ' ' + digits(this.getHours()) + ':' + digits(this.getMinutes());
-        },
-        writable: true
+            return this.time.getFullYear() + '-' + digits(this.time.getMonth()+1)  + '-' + digits(this.time.getDate()) + ' ' + digits(this.time.getHours()) + ':' + digits(this.time.getMinutes());
+        }
     });
 
-    Object.defineProperty(Date, "add", {
-        set: function() {
-            if (delta < 0 || (unit!="years" && unit!="months" && unit!="days" && unit!="hours" && unit!="minutes"))
-                throw new TypeError('Incorrect params');
-
+    Object.defineProperty(dateObj, "add", {
+        value: function(delta, unit) {
+            if (delta < 0)
+                throw new TypeError('Incorrect Params');
+            switch (unit) {
+                case "years": this.time = new Date(this.time.getFullYear() + delta, this.time.getMonth(), this.time.getDate(), this.time.getHours(), this.time.getMinutes()); break;
+                case "months": this.time = new Date(this.time.getFullYear(), this.time.getMonth() + delta, this.time.getDate(), this.time.getHours(), this.time.getMinutes()); break;
+                case "days": this.time = new Date(this.time.getFullYear(), this.time.getMonth(), this.time.getDate() + delta, this.time.getHours(), this.time.getMinutes()); break;
+                case "hours": this.time = new Date(this.time.getFullYear(), this.time.getMonth(), this.time.getDate(), this.time.getHours() + delta, this.time.getMinutes()); break;
+                case "minutes": this.time = new Date(this.time.getFullYear(), this.time.getMonth(), this.time.getDate(), this.time.getHours(), this.time.getMinutes() + delta); break;
+                default: throw new TypeError('Incorrect Params');
+            }
             return this;
         }
     });
 
-    Object.defineProperty(Date, "subtract", {
-        set: function() {
-            if (delta < 0 || (unit!="years" && unit!="months" && unit!="days" && unit!="hours" && unit!="minutes"))
-                throw new TypeError('Incorrect params');
-
+    Object.defineProperty(dateObj, "subtract", {
+        value: function(delta, unit) {
+            if (delta<0)
+                throw new TypeError('Incorrect Params');
+            switch (unit) {
+                case "years": this.time = new Date(this.time.getFullYear() - delta, this.time.getMonth(), this.time.getDate(), this.time.getHours(), this.time.getMinutes()); break;
+                case "months": this.time = new Date(this.time.getFullYear(), this.time.getMonth() - delta, this.time.getDate(), this.time.getHours(), this.time.getMinutes()); break;
+                case "days": this.time = new Date(this.time.getFullYear(), this.time.getMonth(), this.time.getDate() - delta, this.time.getHours(), this.time.getMinutes()); break;
+                case "hours": this.time = new Date(this.time.getFullYear(), this.time.getMonth(), this.time.getDate(), this.time.getHours() - delta, this.time.getMinutes()); break;
+                case "minutes": this.time = new Date(this.time.getFullYear(), this.time.getMonth(), this.time.getDate(), this.time.getHours(), this.time.getMinutes() - delta); break;
+                default: throw new TypeError('Incorrect Params');
+            }
             return this;
         }
     });
 
-    return time.value;
-
+    return dateObj;
 };
