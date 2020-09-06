@@ -11,11 +11,7 @@ module.exports = function (date) {
             function digits (num) {
                 return num < 10 ? '0'+num : num;
             }
-            var month = digits(this.getMonth()+1);
-            var data = digits(this.getDate());
-            var hours = digits(this.getHours());
-            var minutes = digits(this.getMinutes());
-            return '"' + this.getFullYear() + '-' + month  + '-' + data + ' ' + hours + ':' + minutes;
+            return '"' + this.getFullYear() + '-' + digits(this.getMonth()+1)  + '-' + digits(this.getDate()) + ' ' + digits(this.getHours()) + ':' + digits(this.getMinutes());
         },
         writable: true
     });
